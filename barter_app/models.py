@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    class Meta:
+    class Meta(AbstractUser.Meta):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -14,6 +14,12 @@ class User(AbstractUser):
     ads = models.ManyToManyField('Ad', related_name='users', blank=True)
     exchanges = models.ManyToManyField('ExchangeProposal', related_name='users', blank=True)
 
+    groups = models.ManyToManyField(
+        'auth.Group', related_name='barter_app_user_set', blank=True, help_text='The groups this user belongs to.', verbose_name='groups'
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission', related_name='barter_app_user_set', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions'
+    )
     # last_activity = models.DateTimeField(null=True, blank=True) мейби потом сделаю 
     
 
@@ -27,10 +33,10 @@ class Ad(models.Model):
         verbose_name_plural = 'Объявления'
 
     class Category(models.TextChoices):
-        ELECTRONICS = 'electronics', 'Электроника'
-        CLOTHING = 'clothing', 'Одежда'
-        BOOKS = 'books', 'Книги'
-        OTHER = 'other', 'Другое'
+        ELECTRONICS = 'Электроника'
+        CLOTHING = 'Одежда'
+        BOOKS = 'Книги'
+        OTHER = 'Другое'
     
     class Сondition(models.TextChoices):
         NEW = 'new', 'Новое'
@@ -42,7 +48,7 @@ class Ad(models.Model):
 
     title = models.CharField(max_length=100)
     description = models.TextField()
-    image_url = models.URLField()
+    image_url = models.URLField(blank=True, null=True)
     # image = models.ImageField(upload_to='s3 в будущем', blank=True, null=True)
 
     category = models.CharField(max_length=20, choices=Category.choices)
@@ -62,9 +68,9 @@ class ExchangeProposal(models.Model):
         verbose_name_plural = 'Предложения обмена'
 
     class Status(models.TextChoices):
-        PENDING = 'pending', 'Ожидание'
-        ACCEPTED = 'accepted', 'Принято'
-        REJECTED = 'rejected', 'Отклонено'
+        PENDING = 'Ожидание'
+        ACCEPTED = 'Принято'
+        REJECTED = 'Отклонено'
 
     
     id = models.AutoField(primary_key=True)

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Список объявлений{% endblock %}
+
+{% block content %}
+    <h1>Список объявлений</h1>
+    <form method="get" action="{% url 'ad_list' %}" class="search-form">
+            <input type="text" name="q" placeholder="Поиск объявлений..." value="{{ request.GET.q }}">
+            <button type="submit">Найти</button>
+        </form>
+
+        <div class="filters">
+            <label for="category">Категория:</label>
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">Все</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    <div class="ad-list">
+        {% if ads %}
+        {% for ad in ads %}
+            <div class="card">
+                <h2><a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a></h2>
+                <p>{{ ad.description|truncatewords:20 }}</p>  
+                <p>Категория: {{ ad.category }}</p>
+                <p>Состояние: {{ ad.get_condition_display }}</p>
+            </div>
+        {% endfor %}
+        {% else %}
+            <div class="card">
+                <p>Нет объявлений</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
