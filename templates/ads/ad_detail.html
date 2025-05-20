@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ ad.title }}</h1>
+    <p>{{ ad.description }}</p>
+    <p>Категория: {{ ad.category }}</p>
+    <p>Состояние: {{ ad.condition }}</p>
+    <p>Автор: {{ ad.user.username }}</p>
+
+    {% if user.is_authenticated and user != ad.user %}
+        <a href="{% url 'exchange_proposal_create' ad.id %}">Предложить обмен</a>
+    {% endif %}
+
+    <a href="{% url 'ad_list' %}">Вернуться к списку объявлений</a>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Barter{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">  <!-- Подключаем Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="auth">
+                {% if user.is_authenticated %}
+                    <h1>Добро пожаловать, {{ user.username }}!</h1>
+                    <a href="/logout" class="auth_buttons"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                {% else %}
+                    <h1>Добро пожаловать на мой сайт!</h1>
+                    <div>
+                        <a href="/login" class="auth_buttons"><i class="fas fa-sign-in-alt"></i> Войти</a>
+                    </div>
+                    <div>
+                        <a href="/register" class="auth_buttons"><i class="fas fa-user-plus"></i> Зарегистрироваться</a>
+                    </div>
+                {% endif %}
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="/ads/"><i class="fas fa-list"></i> Объявления</a></li>
+                    <!-- Другие ссылки -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Добавим немного стилей в head для примера (лучше вынести в style.css) -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Подключите шрифт Roboto в вашем CSS */
+        }
+    </style>
+
+    <main>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Barter</p>
+    </footer>
+</body>
+</html>
