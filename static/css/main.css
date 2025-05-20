@@ -1,0 +1,105 @@
+:root {
+    --primary: #6366f1;
+    --secondary: #a855f7;
+    --accent: #ec4899;
+    --bg: #f8fafc;
+    --text: #1e293b;
+    --glass: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --text: #f8fafc;
+    --glass: rgba(15, 23, 42, 0.5);
+}
+
+/* Анимации */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.gradient-bg {
+    position: fixed;
+    width: 200vw;
+    height: 200vh;
+    background: linear-gradient(
+        45deg,
+        var(--primary),
+        var(--secondary),
+        var(--accent)
+    );
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+}
+
+/* Навигация */
+.glass-nav {
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.user-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.user-avatar:hover img {
+    transform: scale(1.1);
+}
+
+/* Формы */
+.auth-form {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    background: transparent;
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 1rem;
+    color: var(--text);
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* Карточки объявлений */
+.ad-card {
+    background: var(--glass);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.ad-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.ad-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
