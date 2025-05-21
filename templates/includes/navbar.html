@@ -1,0 +1,148 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+        <!-- Логотип -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{% static 'images/logo.png' %}" 
+                 alt="Logo" 
+                 class="brand-logo"
+                 width="40">
+            <span class="fw-bold">Barter</span>
+        </a>
+        
+        <!-- Правая часть навбара -->
+        <div class="auth-section ms-auto">
+            {% if user.is_authenticated %}
+                <div class="user-menu-wrapper">
+                    <!-- Приветствие и иконка -->
+                    <div class="user-trigger" onclick="toggleUserMenu()">
+                        <span class="greeting">Привет, {{ user.username }}</span>
+                        <i class="fas fa-user-circle user-icon"></i>
+                    </div>
+                    
+                    <!-- Выпадающее меню -->
+                    <div class="user-menu" id="userMenu">
+                        <a href="{% url 'profile' %}" class="menu-item">
+                            <i class="fas fa-user"></i>
+                            Профиль
+                        </a>
+                        <a href="{% url 'my_ads' %}" class="menu-item">
+                            <i class="fas fa-list"></i>
+                            Мои объявления
+                        </a>
+                        <a href="{% url 'my_exchanges' %}" class="menu-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            Мои обмены
+                        </a>
+                        <div class="menu-divider"></div>
+                        <a href="{% url 'logout' %}" class="menu-item logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Выйти
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Кнопки для гостей -->
+                <div class="d-flex gap-2">
+                    <a href="{% url 'login' %}" class="btn btn-outline-primary">Войти</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary">Регистрация</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Стили для выпадающего меню */
+    .user-menu-wrapper {
+        position: relative;
+    }
+
+    .user-trigger {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: background 0.3s;
+    }
+
+    .user-trigger:hover {
+        background: rgba(0,0,0,0.05);
+    }
+
+    .user-icon {
+        font-size: 28px;
+        color: #4a5568;
+    }
+
+    .user-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        min-width: 240px;
+        padding: 8px 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+    }
+
+    .user-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        color: #4a5568;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .menu-item:hover {
+        background: #f8fafc;
+        color: #2563eb;
+    }
+
+    .menu-item i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .menu-divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 8px 0;
+    }
+
+    .logout {
+        color: #ef4444;
+    }
+</style>
+
+<script>
+    function toggleUserMenu() {
+        const menu = document.getElementById('userMenu');
+        menu.classList.toggle('show');
+    }
+
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('userMenu');
+        const trigger = document.querySelector('.user-trigger');
+        
+        if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+</script>

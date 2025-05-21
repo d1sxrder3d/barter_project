@@ -1,15 +1,83 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ ad.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ ad.title }}</h1>
-    <p>{{ ad.description }}</p>
-    <p>Категория: {{ ad.category }}</p>
-    <p>Состояние: {{ ad.condition }}</p>
-    <p>Автор: {{ ad.user.username }}</p>
-
-    {% if user.is_authenticated and user != ad.user %}
-        <a href="{% url 'exchange_proposal_create' ad.id %}">Предложить обмен</a>
-    {% endif %}
-
-    <a href="{% url 'ad_list' %}">Вернуться к списку объявлений</a>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                {% if ad.image_url %}
+                <img src="{{ ad.image_url }}" 
+                     class="card-img-top" 
+                     alt="{{ ad.title }}"
+                     style="max-height: 450px; object-fit: cover;">
+                {% else %}
+                    <div class="placeholder-image d-flex align-items-center justify-content-center"
+                    style="height: 450px; background: #f3f4f6;">
+                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <h1 class="card-title display-5">{{ ad.title }}</h1>
+                        <div>
+                            <span class="badge bg-primary fs-6">{{ ad.get_category_display }}</span>
+                            <span class="badge bg-primary fs-6">{{ ad.get_condition_display }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="lead">{{ ad.description }}</p>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 text-muted">Информация о товаре</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Продавец:</strong> {{ ad.user.username }}</li>
+                                        {% comment %} <li><strong>Категория:</strong> {{ ad.get_category_display }}</li> {% endcomment %}
+                                        <li><strong>Дата публикации:</strong> {{ ad.created_at|date:"d M Y H:i" }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+{% comment %}                         
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 text-muted">Информация о владельце</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Продавец:</strong> {{ ad.user.username }}</li>
+                                        <li><strong>Аккаунт создан:</strong> {{ ad.user.date_joined|date:"d M Y" }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'ad_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Назад к списку
+                        </a>
+                        {% if user == ad.user %}
+                        <div class="btn-group">
+                            <a href="{% url 'ad_update' ad.id %}" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Редактировать
+                            </a>
+                            <a href="{% url 'ad_delete' ad.id %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Удалить
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

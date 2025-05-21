@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="edit-profile-container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-section avatar-upload">
+            <label class="upload-label">
+                {{ form.avatar }}
+                <div class="avatar-preview">
+                    {% if form.instance.avatar %}
+                        <img src="{{ form.instance.avatar.url }}" 
+                             alt="Текущий аватар">
+                    {% else %}
+                        <i class="fas fa-camera"></i>
+                    {% endif %}
+                </div>
+                <span class="upload-text">Изменить фото</span>
+            </label>
+        </div>
+
+        <div class="form-section">
+            <label>Имя пользователя</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Имя</label>
+                {{ form.first_name }}
+            </div>
+            
+            <div class="form-group">
+                <label>Фамилия</label>
+                {{ form.last_name }}
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <label>О себе:</label>
+            {{ form.bio }}
+        </div>
+
+        <div class="form-section">
+            <label>Email</label>
+            {{ form.email }}
+        </div>
+
+        <button type="submit" class="save-btn">
+            <i class="fas fa-save"></i>
+            Сохранить изменения
+        </button>
+    </form>
+</div>
+{% endblock %}

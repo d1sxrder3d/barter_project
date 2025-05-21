@@ -1,0 +1,46 @@
+{% block content %}
+<div class="exchanges-container">
+    <div class="exchange-tabs">
+        <button class="tab active" data-tab="incoming">Входящие ({{ incoming.count }})</button>
+        <button class="tab" data-tab="outgoing">Исходящие ({{ outgoing.count }})</button>
+        <button class="tab" data-tab="active">Текущие ({{ active.count }})</button>
+        <button class="tab" data-tab="archive">Архив ({{ archive.count }})</button>
+    </div>
+
+    <!-- Входящие предложения -->
+    <div class="tab-content active" id="incoming">
+        {% for exchange in incoming %}
+            {% include 'exchanges/_exchange_item.html' %}
+        {% empty %}
+            <div class="no-exchanges">Нет входящих предложений</div>
+        {% endfor %}
+    </div>
+
+    <!-- Исходящие предложения -->
+    <div class="tab-content" id="outgoing">
+        {% for exchange in outgoing %}
+            {% include 'exchanges/_exchange_item.html' %}
+        {% empty %}
+            <div class="no-exchanges">Нет исходящих предложений</div>
+        {% endfor %}
+    </div>
+
+    <!-- Активные обмены -->
+    <div class="tab-content" id="active">
+        {% for exchange in active %}
+            {% include 'exchanges/_exchange_item.html' %}
+        {% empty %}
+            <div class="no-exchanges">Нет активных обменов</div>
+        {% endfor %}
+    </div>
+
+    <!-- Архив -->
+    <div class="tab-content" id="archive">
+        {% for exchange in archive %}
+            {% include 'exchanges/_exchange_item.html' %}
+        {% empty %}
+            <div class="no-exchanges">Архив пуст</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
