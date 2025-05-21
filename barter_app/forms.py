@@ -20,12 +20,16 @@ class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
         fields = ['title', 'description', 'image_url', 'category', 'condition']
-        widgets = {
-            'category': forms.Select(choices=Ad.Category),
-            'condition': forms.Select(choices=Ad.Сondition)
-        }
+        # widgets = {
+        #     'category': forms.Select(choices=Ad.category),
+        #     'condition': forms.Select(choices=Ad.condition)
+        # }
 
 class AdDetails(forms.ModelForm):
     class Meta:
         model = Ad
         fields = ['title', 'description', 'image_url', 'category', 'condition']
+        # widgets = {
+        #     'category': forms.Select(choices=Ad.category),
+        #     'condition': forms.Select(choices=Ad.condition)
+        # }

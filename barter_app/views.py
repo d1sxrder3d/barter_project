@@ -10,7 +10,9 @@ from .models import Ad, User, ExchangeProposal
 
 def ad_list(request):
     ads = Ad.objects.all()    
-    categories = Ad.Category.values
+   
+    categories = Ad.AD_CATEGORY_VALUES
+
     query = request.GET.get('q')
     category = request.GET.get('category')
 
@@ -47,6 +49,29 @@ def my_ads(request):
 def ad_detail(request, ad_id):
     ad = Ad.objects.get(pk=ad_id)
     return render(request, 'ads/ad_detail.html', {'ad': ad})
+
+
+@login_required
+def ad_update(request, ad_id):
+    ad = Ad.objects.get(pk=ad_id)
+    if request.method == 'POST':
+        form = AdForm(request.POST, instance=ad)
+        if form.is_valid():
+            form.save()
+            return redirect('ad_detail', ad_id)
+        #return redirect(f'ad_detail/{ad.id}')
+    else:
+        form = AdForm(instance=ad)
+
+    return render(request, 'ads/ad_update.html', {'form': form, 'ad': ad})
+
+@login_required
+def ad_delete(request, ad_id):
+    ad = Ad.objects.get(pk=ad_id)
+    if request.method == 'POST':
+        ad.delete()
+        return redirect('ad_list')
+    return render(request, 'ads/ad_delete.html', {'ad': ad})
 
 
 
