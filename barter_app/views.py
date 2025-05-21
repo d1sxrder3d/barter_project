@@ -181,4 +181,27 @@ def create_exchange_proposal(request, ad_s_id, ad_r_id):
                 message=message
             )
             return redirect('/')
-    # return render(request, 'ads/create_exchange_proposal.html', {'ad': ad})
+    # return render(request, 'ads/create_exchange_proposal.html', {'ad': ad})\
+
+@login_required
+def my_exchanges(request):
+    # Получаем все связанные обмены
+    exchanges = ExchangeProposal.objects.filter(
+        models.Q(proposer=request.user) | 
+        models.Q(recipient=request.user)
+    ).distinct().select_related(
+        'proposed_ad', 
+        'desired_ad'
+    )
+
+    # Фильтрация по статусу
+    status_filter = request.GET.get('status')
+    if status_filter:
+        exchanges = exchanges.filter(status=status_filter)
+
+    context = {
+        'exchanges': exchanges,
+        'status_choices': ExchangeProposal.STATUS_CHOICES,
+        'current_filter': status_filter
+    }
+    return render(request, 'exchanges/my_exchanges.html', context)

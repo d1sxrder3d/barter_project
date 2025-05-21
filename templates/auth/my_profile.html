@@ -34,11 +34,19 @@
             </div>
             
             <div class="profile-details">
+
                 <div class="detail-item">
+                    <label>email: </label>
                     <i class="fas fa-envelope"></i>
                     <span>{{ user.email }}</span>
                 </div>
                 
+                <div class="detail-item">
+                    <label>О себе: </label>
+                    <i class="fas fa-phone"></i>
+                    <span>{{ user.bio }}</span>
+                </div>
+
                 <div class="detail-item">
                     <i class="fas fa-calendar-alt"></i>
                     <span>На сайте с: {{ user.date_joined|date:"d.m.Y" }}</span>

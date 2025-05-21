@@ -34,10 +34,12 @@ class ProfileEditForm(forms.ModelForm):
             'first_name', 
             'last_name',
             'email',
+            'bio',
             # 'avatar'  # Если у вас есть поле avatar в модели
         ]
         widgets = {
-            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'readonly': True}),
+            'bio': forms.Textarea(attrs={'rows': 3}),
         }
 
 class AdForm(forms.ModelForm):
