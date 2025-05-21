@@ -23,6 +23,23 @@ class ProfileForm(forms.ModelForm):
             'bio': forms.Textarea(attrs={'rows': 3}),
         }
 
+
+class ProfileEditForm(forms.ModelForm):
+    password = None  # Убираем поле смены пароля
+    
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'first_name', 
+            'last_name',
+            'email',
+            # 'avatar'  # Если у вас есть поле avatar в модели
+        ]
+        widgets = {
+            'avatar': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
 class AdForm(forms.ModelForm):
     class Meta:
         model = Ad

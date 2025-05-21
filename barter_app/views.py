@@ -52,13 +52,20 @@ def ad_create(request):
 @login_required
 def my_ads(request):
     ads = Ad.objects.filter(user=request.user)
-
-    return render(request, 'ads/my_ads.html', {'ads': ads})
+    if request.method == 'POST':
+        form = AdForm(request.POST)
+        if form.is_valid():
+            ad = form.save(commit=False)
+            ad.user = request.user
+            ad.save()
+            return redirect('my_ads')
+    else:
+        form = AdForm()
+    return render(request, 'ads/my_ads.html', {'ads': ads, 'form': form})
 
 
 def ad_detail(request, ad_id):
     ad = Ad.objects.get(pk=ad_id)
-
     return render(request, 'ads/ad_detail.html', {'ad': ad})
 
 
@@ -141,19 +148,24 @@ def user_logout(request):
     messages.success(request, "Выход выполнен успешно.")
     return redirect('ad_list')
 
-
 @login_required
 def user_profile(request):
+    return render(request, 'auth/my_profile.html')
+
+
+
+@login_required
+def user_profile_edit(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Профиль успешно обновлен.')
-            return redirect('user_profile')
+            return redirect('profile')
     else:
         form = ProfileForm(instance=request.user)
 
-    return render(request, 'auth/my_profile.html', {'form': form})
+    return render(request, 'auth/edit_profile.html', {'form': form})
 
 @login_required
 def create_exchange_proposal(request, ad_s_id, ad_r_id):

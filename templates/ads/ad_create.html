@@ -1,49 +1,55 @@
-{% extends 'base.html' %}
-{% load widget_tweaks %}
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Добавить объявление{% endblock %}
+{% block title %}{% if object %}Редактирование{% else %}Создание{% endif %} объявления{% endblock %}
 
 {% block content %}
-<h1 class="text-xl font-bold mb-[20px] mt-[20px]">Новое объявление</h1>
-
-<form method='post' class='space-y-[15px]' novalidate>
-  {% csrf_token %}
-  
-  <!-- Можно использовать django-widget-tweaks для стилизации форм -->
-  
-  <!-- Или вручную добавлять классы к полям -->
-  
-<div>
-<label for="{{ form.title.id_for_label }}" class='block mb-[5px] font-medium'>Заголовок:</label>
-{{ form.title|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        {% if object %}Редактирование{% else %}Новое{% endif %} объявление
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            {% for field in form %}
+                            <div class="col-12">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                            
+                            <div class="col-12">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{% if object %}{% url 'ad_detail' object.id %}{% else %}{% url 'ad_list' %}{% endif %}" 
+                                       class="btn btn-secondary">
+                                        Отмена
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div>
-<label for="{{ form.description.id_for_label }}" class='block mb-[5px] font-medium'>Описание:</label>
-{{ form.description|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
-</div>
-
-<div>
-<label for="{{ form.image_url.id_for_label }}" class='block mb-[5px] font-medium'>Изображение (URL):</label>
-{{ form.image_url|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
-
-
-</div>
-
-
-<div>
-<label for="{{ form.category.id_for_label }}" class='block mb-[5px] font-medium'>Категория:</label>
-{{ form.category|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
-</div>
-
-<div>
-<label for="{{ form.condition.id_for_label }}" class='block mb-[5px] font-medium'>Состояние:</label>
-{{ form.condition|add_class:"w-full p-[10px] border border-gray-300 rounded" }} 
-</div>
-
-<button type='submit' 
-        class='mt-[20px] px-[20px] py-[10px] bg-green-600 text-white rounded hover:bg-green-700 transition'>Создать объявление</button>
-
-</form>
-
 {% endblock %}
+
+
+
+{% comment %} юзлес щас, мб потом переделаю под это {% endcomment %}

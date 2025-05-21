@@ -1,26 +1,55 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{%block head%}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold mb-4">Редактировать профиль</h1>
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="mb-4">
-            <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">Имя:</label>
-            {{ form.first_name }}
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Аватар -->
+        <div class="avatar-section">
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" 
+                     alt="Аватар" 
+                     class="profile-avatar">
+            {% else %}
+                <div class="default-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            {% endif %}
         </div>
         
-        <div class="mb-4">
-            <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">Фамилия:</label>
-            {{ form.last_name }}
+        <!-- Информация -->
+        <div class="profile-info">
+            <h2 class="profile-name">
+                <div>
+                    {{ user.first_name }} {{ user.last_name }} 
+                </div>
+                
+            </h2>
+            <div class="username-section">
+                    <span class="username">@{{ user.username }}</span>
+            </div>
+            
+            <div class="profile-details">
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ user.email }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>На сайте с: {{ user.date_joined|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+            
+            <a href="{% url 'edit_profile' %}" class="edit-btn">
+                <i class="fas fa-edit"></i>
+                Редактировать профиль
+            </a>
         </div>
-        
-        <div class="mb-6">
-            <label for="{{ form.bio.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">О себе:</label>
-            {{ form.bio }}
-        </div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Сохранить изменения</button>
-    </form>
+    </div>
 </div>
 {% endblock %}

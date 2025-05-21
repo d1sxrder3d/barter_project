@@ -1,61 +1,83 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ ad.title }}{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-lg">
-    <div class="flex justify-between items-center mb-4">
-        <!-- Кнопка назад -->
-        <a href="{% url 'ad_list' %}" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition">
-            Назад
-        </a>
-
-        <!-- Проверка владельца -->
-        {% if user.is_authenticated and user == ad.user %}
-        <div class="flex space-x-2">
-            <a href="{% url 'ad_update' ad.id %}" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">Редактировать</a>
-            <form action="{% url 'ad_delete' ad.id %}" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить это объявление?');">
-                {% csrf_token %}
-                <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Удалить</button>
-            </form>
-        </div>
-        {% endif %}
-    </div>
-
-    <h1 class="text-3xl font-bold mb-4">{{ ad.title }}</h1>
-    
-  
-
-    <!-- Фото галерея -->
-    {% if ad.image_url %}
-        <div class="mb-6">
-            <div class="flex overflow-x-scroll space-x-4">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                {% if ad.image_url %}
+                <img src="{{ ad.image_url }}" 
+                     class="card-img-top" 
+                     alt="{{ ad.title }}"
+                     style="max-height: 450px; object-fit: cover;">
+                {% else %}
+                    <div class="placeholder-image d-flex align-items-center justify-content-center"
+                    style="height: 450px; background: #f3f4f6;">
+                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                {% endif %}
                 
-                <img src="{{ ad.image_url }}" alt="Image" class="w-64 h-48 object-cover rounded-lg shadow-md" />
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <h1 class="card-title display-5">{{ ad.title }}</h1>
+                        <div>
+                            <span class="badge bg-primary fs-6">{{ ad.get_category_display }}</span>
+                            <span class="badge bg-primary fs-6">{{ ad.get_condition_display }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="lead">{{ ad.description }}</p>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 text-muted">Информация о товаре</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Продавец:</strong> {{ ad.user.username }}</li>
+                                        {% comment %} <li><strong>Категория:</strong> {{ ad.get_category_display }}</li> {% endcomment %}
+                                        <li><strong>Дата публикации:</strong> {{ ad.created_at|date:"d M Y H:i" }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+{% comment %}                         
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-subtitle mb-2 text-muted">Информация о владельце</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Продавец:</strong> {{ ad.user.username }}</li>
+                                        <li><strong>Аккаунт создан:</strong> {{ ad.user.date_joined|date:"d M Y" }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'ad_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Назад к списку
+                        </a>
+                        {% if user == ad.user %}
+                        <div class="btn-group">
+                            <a href="{% url 'ad_update' ad.id %}" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Редактировать
+                            </a>
+                            <a href="{% url 'ad_delete' ad.id %}" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Удалить
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
-    {% endif %}
-
-    <!-- Описание -->
-    <div class="mb-4">
-        <h2 class="text-xl font-semibold mb-2">Описание</h2>
-        <p class="text-gray-700">{{ ad.description }}</p>
-    </div>
-
-    <!-- Категория -->
-    <div class="mb-4">
-        <h2 class="text-xl font-semibold mb-2">Категория</h2>
-        <p class="text-gray-700">{{ ad.get_category_display }}</p>
-    </div>
-
-    <!-- Состояние -->
-    <div class="mb-4">
-        <h2 class="text-xl font-semibold mb-2">Состояние</h2>
-        <p class="text-gray-700">{{ ad.get_condition_display }}</p>
-    </div>
-
-    <!-- Автор и дата -->
-    <div class="flex justify-between items-center text-gray-600 text-sm">
-        <div>Автор: {{ ad.user.username }}</div>
-        <div>Опубликовано: {{ ad.created_at|date:"d.m.Y H:i" }}</div>
     </div>
 </div>
 {% endblock %}

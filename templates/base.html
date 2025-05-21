@@ -1,97 +1,35 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{% block title %}Мой сайт объявлений{% endblock %}</title>
-<!-- Tailwind CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-{% block extra_head %}{% endblock %}
-</head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-
-<!-- Навигация -->
-<nav class="bg-white shadow-md fixed top-2 w-full z-50">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-    <div class="flex items-center space-x-2">
-      <img src="{% static 'images/fav.ico' %}" alt="Favicon" width="32" height="32" >
-      <a href="{% url 'ad_list' %}" class="text-xl font-bold text-blue-600">BARTER</a>
-    </div>
-    <div class="space-x-4">
-      {% if user.is_authenticated %}
-      <a href="{% url 'ad_create' %}" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Добавить объявление</a>
-
-      <!-- Выпадающее меню профиля -->
-      <div class="relative inline-block text-left">
-        <div>
-          <button type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
-          id="menu-button" aria-expanded="true" aria-haspopup="true">
-            Профиль
-            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </div>
-
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Barter Platform{% endblock %}</title>
+    
+    <link rel="shortcut icon" type="images" href="{% static 'images/favicon.ico' %}">
         
-        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-          <div class="py-1" role="none">
-            <a href="{% url 'profile' %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0">Информация</a>
-            <a href="{% url 'my_ads' %}" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1">Мои объявления</a>
-            <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2">Мои обмены</a>
-            <a href="{% url 'logout' %}" class="text-red-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-3">Выход</a>
-          </div>
+        
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% comment %} <link rel="shortcut icon" type="images" href="{% static 'logo.png' %}"> {% endcomment %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
         </div>
-      </div>
+    </main>
 
-      {% else %}
-        <a href="{% url 'login' %}" class="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Войти</a>
-        <a href="{% url 'register' %}" class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Регистрация</a>
-      {% endif %}
-    </div>
-  </div>
-</nav>
-
-<script>
-  // JavaScript для управления выпадающим меню (показать/скрыть)
-  const menuButton = document.getElementById('menu-button');
-  const menu = document.querySelector('[role="menu"]');
-
-  menuButton.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
-  });
-
-  // Закрыть меню при клике вне меню
-  document.addEventListener('click', (event) => {
-    if (!menuButton.contains(event.target) && !menu.contains(event.target)) {
-      menu.classList.add('hidden');
-    }
-  });
-</script>
-
-<!-- Основной контент -->
-<div class="pt-[80px] max-w-7xl mx-auto px-4 min-h-screen">
-  {% if messages %}
-    {% for message in messages %}
-      <div class="mb-4 p-4 rounded {{ message.tags }} bg-green-100 text-green-800">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-  
-  {% block content %}{% endblock %}
-</div>
-
-<!-- Подвал -->
-<footer class="bg-gray-800 text-gray-200 py-4 mt-auto">
-  <div class="max-w-7xl mx-auto px-4 text-center">
-    &copy; {{ now.year }} Мой сайт объявлений
-  </div>
-</footer>
-
-<!-- Скрипты -->
-{% block extra_scripts %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
