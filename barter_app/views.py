@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm, ProfileForm
 from .models import Ad, User, ExchangeProposal
+from barter_app import models
 
 cat = {
     'Электроника': 'Electronics',
@@ -167,41 +168,5 @@ def user_profile_edit(request):
 
     return render(request, 'auth/edit_profile.html', {'form': form})
 
-@login_required
-def create_exchange_proposal(request, ad_s_id, ad_r_id):
-    ad_s = Ad.objects.get(pk=ad_s_id)
-    ad_r = Ad.objects.get(pk=ad_r_id)
-
-    if request.method == 'POST':
-        message = request.POST.get('message')
-        if message:
-            exchange_proposal = ExchangeProposal.objects.create(
-                ad_sender_id=request.ad_s.id,
-                ad_receiver_id=request.ad_r.id,
-                message=message
-            )
-            return redirect('/')
-    # return render(request, 'ads/create_exchange_proposal.html', {'ad': ad})\
-
-@login_required
 def my_exchanges(request):
-    # Получаем все связанные обмены
-    exchanges = ExchangeProposal.objects.filter(
-        models.Q(proposer=request.user) | 
-        models.Q(recipient=request.user)
-    ).distinct().select_related(
-        'proposed_ad', 
-        'desired_ad'
-    )
-
-    # Фильтрация по статусу
-    status_filter = request.GET.get('status')
-    if status_filter:
-        exchanges = exchanges.filter(status=status_filter)
-
-    context = {
-        'exchanges': exchanges,
-        'status_choices': ExchangeProposal.STATUS_CHOICES,
-        'current_filter': status_filter
-    }
-    return render(request, 'exchanges/my_exchanges.html', context)
+    pass
