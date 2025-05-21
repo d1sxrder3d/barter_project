@@ -1,101 +1,123 @@
+/* Общие стили */
 :root {
-    --primary: #2563eb;
-    --secondary: #7c3aed;
-    --background: #f8fafc;
-    --text: #1e293b;
+  --primary-color: #007bff;
+  --text-color: #212529;
+  --background-color: #f8f9fa;
+  --secondary-background-color: #ffffff;
+  --border-color: #e9ecef;
+  --secondary-text-color: #adb5bd;
+  --font-family-base: "Roboto", sans-serif;
+  --font-family-headings: "Montserrat", sans-serif;
 }
 
-/* Глобальные стили */
 body {
-    font-family: 'Inter', sans-serif;
-    background: var(--background);
-    color: var(--text);
-    line-height: 1.6;
+  font-family: var(--font-family-base);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-headings);
+  font-weight: 600;
+  margin-bottom: 0.5em;
 }
 
 /* Навигация */
-.navbar.glass {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+nav {
+  background-color: var(--secondary-background-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 0;
 }
 
-/* Карточки объявлений */
-.ad-card {
-    background: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    transition: transform 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.ad-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Адаптивная сетка */
-.ad-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 2rem 0;
-}
-
-/* Кнопки с микроинтеракциями */
-.btn {
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    transition: opacity 0.3s ease;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
-
-.navbar {
-  background: #ffffff;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+nav .container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2563eb;
+nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-.nav-link {
-  margin-left: 2rem;
-  color: #4b5563;
-  transition: color 0.3s;
+nav a:hover {
+  color: var(--primary-color);
 }
 
-.nav-link:hover {
-  color: #2563eb;
+nav .nav-links {
+  display: flex;
+  gap: 30px;
 }
 
-.btn-logout {
-  background: #ef4444;
-  color: white !important;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+/* Кнопки */
+.button {
+  background-color: var(--primary-color);
+  color: var(--secondary-background-color);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
 
-.btn-details {
-  background: linear-gradient(45deg, #2563eb, #4f46e5);
+.button:hover {
+  background-color: #0056b3;
 }
 
-.ad-card {
-  opacity: 0;
-  animation: fadeIn 0.5s forwards;
+.button-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.button-secondary:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-background-color);
+}
+
+/* Формы */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-family: var(--font-family-base);
+}
+
+/* Ссылки */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+/* Дополнительные стили (по мере необходимости) */
+.card {
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 20px;
 }

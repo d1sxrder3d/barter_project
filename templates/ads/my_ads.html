@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-x-[20px] gap-y-[30px]">
+    <h1> Мои Объявления </h1>
+    {% if ads %}
+        {% for ad in ads %}
+        <div class="bg-white rounded shadow hover:shadow-lg transition duration-[0.3s] flex flex-col overflow-hidden">
+          {% if ad.image_url %}
+            <img src="{{ ad.image_url }}" alt="{{ ad.title }}" class="h-[200px] w-full object-cover">
+          {% else %}
+            <div class="h-[200px] bg-gray-200 flex items-center justify-center text-gray-500">Нет изображения</div>
+          {% endif %}
+          <div class="p-[15px] flex flex-col flex-grow">
+            <h2 class="text-xl font-semibold mb-[10px]">{{ ad.title }}</h2>
+            <p class="text-gray-700 mb-[10px]">{{ ad.description|truncatechars:100 }}</p>
+            <p class="text-sm text-gray-500 mb-[15px]"><strong>Категория:</strong> {{ ad.category }}</p>
+            <a href="{% url 'ad_detail' ad.id %}" 
+               class='mt-auto px-[15px] py-[10px] bg-blue-600 text-white rounded hover:bg-blue-700 transition self-start'>Подробнее</a>
+          </div>
+        </div>
+        {% endfor %}
+    {%else%}
+        <div class="bg-white rounded shadow hover:shadow-lg transition duration-[0.3s] flex flex-col overflow-hidden">
+            <div class="h-[50px] bg-gray-200 flex items-center justify-center text-gray-500">
+                <h2> Объявлений пока что нет! </h2>
+            </div>
+            <div class="h-[50px] bg-gray-200 flex items-center justify-center text-blue-500">
+                <a href={% url 'ad_create'%}> Создать! </a>
+            </div>
+                
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

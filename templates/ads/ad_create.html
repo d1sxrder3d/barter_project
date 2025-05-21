@@ -1,11 +1,46 @@
-{% extends "base.html" %}
-{% block title %}Создать объявление{% endblock %}
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Добавить объявление{% endblock %}
 
 {% block content %}
-    <h1>Создать объявление</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
-    </form>
+<h1 class="text-xl font-bold mb-[20px] mt-[20px]">Новое объявление</h1>
+
+<form method='post' class='space-y-[15px]' novalidate>
+  {% csrf_token %}
+  
+  <!-- Можно использовать django-widget-tweaks для стилизации форм -->
+  
+  <!-- Или вручную добавлять классы к полям -->
+  
+<div>
+<label for="{{ form.title.id_for_label }}" class='block mb-[5px] font-medium'>Заголовок:</label>
+{{ form.title|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
+</div>
+
+<div>
+<label for="{{ form.description.id_for_label }}" class='block mb-[5px] font-medium'>Описание:</label>
+{{ form.description|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
+</div>
+
+<div>
+<label for="{{ form.image_url.id_for_label }}" class='block mb-[5px] font-medium'>Изображение (URL):</label>
+{{ form.image_url|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
+</div>
+
+<div>
+<label for="{{ form.category.id_for_label }}" class='block mb-[5px] font-medium'>Категория:</label>
+{{ form.category|add_class:"w-full p-[10px] border border-gray-300 rounded" }}
+</div>
+
+<div>
+<label for="{{ form.condition.id_for_label }}" class='block mb-[5px] font-medium'>Состояние:</label>
+{{ form.condition|add_class:"w-full p-[10px] border border-gray-300 rounded" }} 
+</div>
+
+<button type='submit' 
+        class='mt-[20px] px-[20px] py-[10px] bg-green-600 text-white rounded hover:bg-green-700 transition'>Создать объявление</button>
+
+</form>
+
 {% endblock %}

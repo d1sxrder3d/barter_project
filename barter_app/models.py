@@ -39,8 +39,8 @@ class Ad(models.Model):
         OTHER = 'Другое'
     
     class Сondition(models.TextChoices):
-        NEW = 'new', 'Новое'
-        USED = 'used', 'Б/у'
+        NEW = 'Новое'
+        USED = 'Б/у'
         
 
     id = models.AutoField(primary_key=True)

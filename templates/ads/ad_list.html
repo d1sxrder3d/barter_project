@@ -1,45 +1,51 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Список объявлений{% endblock %}
 
 {% block content %}
-<section class="ad-grid">
-    <div class="search-bar glass">
-        <form method="GET">
-            <i class="bx bx-search"></i>
-            <input type="text" name="q" placeholder="Искать товары..." value="{{ query }}">
-            <select name="category">
-                <option value="">Все категории</option>
-                {% for category in categories %}
-                    <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>{{ category }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="btn-glow">Найти</button>
-        </form>
-    </div>
+<h1 class="text-3xl font-bold mb-6 mt-4">Объявления</h1>
 
-    <div class="grid-container">
-        {% for ad in ads %}
-        <a href="{% url 'ad_detail' ad.id %}" class="ad-card">
-            <div class="ad-badge">{{ ad.category }}</div>
-            <div class="ad-media">
-                <img src="{{ ad.image_url }}" alt="{{ ad.title }}" loading="lazy">
-                <div class="hover-overlay">
-                    <i class="bx bx-zoom-in"></i>
-                </div>
-            </div>
-            <div class="ad-content">
-                <h3 class="ad-title">{{ ad.title }}</h3>
-                <div class="ad-meta">
-                    <div class="user-info">
-                        <img src="{{ ad.user.profile.avatar.url }}" alt="User">
-                        <span>{{ ad.user.username }}</span>
-                    </div>
-                    <div class="ad-price">
-                        {{ ad.price }} ₽
-                    </div>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
+<!-- Форма поиска -->
+<form method="get" class="mb-8 flex flex-col md:flex-row gap-y-2 md:gap-x-4">
+
+    {% if request.GET.q %}
+  <input type='text' name='q' value="{{ query }}" placeholder='Поиск...' 
+         class='flex-grow p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300'>
+    {% else %}
+    <input type='text' name='q' placeholder='Поиск...' 
+           class='flex-grow p-3 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300'>
+    {% endif %}
+
+  <select name='category' class='p-[10px] border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300'>
+    <option value=''>Все категории</option>
+    {% for cat in categories %}
+      <option value="{{ cat }}" {% if cat == request.GET.category %}selected{% endif %}>{{ cat }}</option>
+    {% endfor %}
+  </select>
+  <button type='submit' 
+          class='px-[20px] py-[10px] bg-blue-600 text-white rounded hover:bg-blue-700 transition'>Искать</button>
+</form>
+
+<!-- Карточки объявлений -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-x-[20px] gap-y-[30px]">
+  {% for ad in ads %}
+    <div class="bg-white rounded shadow hover:shadow-lg transition duration-[0.3s] flex flex-col overflow-hidden">
+      {% if ad.image_url %}
+        <img src="{{ ad.image_url }}" alt="{{ ad.title }}" class="h-[200px] w-full object-cover">
+      {% else %}
+        <div class="h-[200px] bg-gray-200 flex items-center justify-center text-gray-500">Нет изображения</div>
+      {% endif %}
+      <div class="p-[15px] flex flex-col flex-grow">
+        <h2 class="text-xl font-semibold mb-[10px]">{{ ad.title }}</h2>
+        <p class="text-gray-700 mb-[10px]">{{ ad.description|truncatechars:100 }}</p>
+        <p class="text-sm text-gray-500 mb-[15px]"><strong>Категория:</strong> {{ ad.category }}</p>
+        <a href="{% url 'ad_detail' ad.id %}" 
+           class='mt-auto px-[15px] py-[10px] bg-blue-600 text-white rounded hover:bg-blue-700 transition self-start'>Подробнее</a>
+      </div>
     </div>
-</section>
+  {% empty %}
+    <p>Объявлений не найдено.</p>
+  {% endfor %}
+</div>
+
 {% endblock %}

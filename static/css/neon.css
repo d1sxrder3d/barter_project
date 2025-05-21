@@ -1,0 +1,83 @@
+:root {
+    --neon-cyan: #0ff;
+    --neon-pink: #f0f;
+    --matrix-green: #0f0;
+    --cyber-black: #00010a;
+    --hologram-blue: rgba(0, 255, 255, 0.1);
+}
+
+body.bg-space {
+    background: radial-gradient(circle at center, #000a1f, #000);
+    color: #fff;
+    font-family: 'Exo 2', sans-serif;
+}
+
+/* Анимированный звездный фон */
+.starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Навигация */
+.cyber-nav {
+    border-bottom: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 30px var(--hologram-blue);
+}
+
+.cyber-logo {
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 15px var(--neon-cyan);
+    letter-spacing: 3px;
+}
+
+/* Карточки объявлений */
+.cyber-card {
+    background: linear-gradient(145deg, #001 0%, #002 100%);
+    border: 1px solid var(--neon-cyan);
+    transform-style: preserve-3d;
+    transition: all 0.4s;
+}
+
+.cyber-card:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px);
+    box-shadow: 0 0 50px var(--hologram-blue);
+}
+
+/* Эффект параллакса */
+[data-parallax] {
+    transition: transform 0.3s ease-out;
+}
+
+/* Голографические эффекты */
+.card-hologram {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        var(--hologram-blue) 4px
+    );
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Анимация glitch */
+.glitch-text {
+    position: relative;
+    animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 2px var(--neon-pink); }
+    96% { text-shadow: 2px 2px var(--neon-pink); }
+    97% { text-shadow: -3px 1px var(--neon-cyan); }
+    98% { text-shadow: 3px -1px var(--matrix-green); }
+    99% { text-shadow: 0 0 transparent; }
+    100% { text-shadow: 2px 2px var(--neon-pink); }
+}

@@ -9,8 +9,8 @@ from .models import Ad, User, ExchangeProposal
 
 
 def ad_list(request):
-    ads = Ad.objects.all()
-    categories = Ad.Category.values  
+    ads = Ad.objects.all()    
+    categories = Ad.Category.values
     query = request.GET.get('q')
     category = request.GET.get('category')
 
@@ -38,6 +38,10 @@ def ad_create(request):
         form = AdForm()
     return render(request, 'ads/ad_create.html', {'form': form})
 
+@login_required
+def my_ads(request):
+    ads = Ad.objects.filter(user=request.user)
+    return render(request, 'ads/my_ads.html', {'ads': ads})
 
 
 def ad_detail(request, ad_id):

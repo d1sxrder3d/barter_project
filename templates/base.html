@@ -1,72 +1,55 @@
-{%load static%}
+{% load static %}
 
 <!DOCTYPE html>
-<html lang="ru" class="{% if request.user.is_authenticated %}auth-user{% endif %}">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barter | {% block title %}{% endblock %}</title>
-    
-    <!-- Modern CSS -->
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    
-    <!-- Иконки -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{% block title %}Мой сайт объявлений{% endblock %}</title>
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+{% block extra_head %}{% endblock %}
 </head>
-<body data-theme="light">
-    <!-- Анимированный бэкграунд -->
-    <div class="gradient-bg"></div>
+<body class="bg-gray-100 text-gray-800 font-sans">
 
-    <!-- Glassmorphism навигация -->
-    <nav class="glass-nav">
-        <a href="/" class="brand">
-            <img src="{% static 'images/logo.svg' %}" alt="Barter">
-            <span>Barter</span>
-        </a>
+<!-- Навигация -->
+<nav class="bg-white shadow-md fixed top-0 w-full z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="{% url 'ad_list' %}" class="text-xl font-bold text-blue-600">Barter</a>
+    <div class="space-x-4">
+      {% if user.is_authenticated %}
+        <a href="{% url 'ad_create' %}" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Добавить объявление</a>
+        <a href="{% url 'my_ads' %}" class="px-3 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Мои объявления</a>
+        <a href="{% url 'logout' %}" class="px-3 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">Выход</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600">Войти</a>
+        <a href="{% url 'register' %}" class="px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Регистрация</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
 
-        <div class="nav-controls">
-            <div class="theme-switcher">
-                <i class="bx bx-sun"></i>
-            </div>
-            {% if user.is_authenticated %}
-                <a href="#" class="user-avatar">
-                    <img src="# alt="Avatar">
-                </a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn login-btn">Войти</a>
-            {% endif %}
-        </div>
-    </nav>
+<!-- Основной контент -->
+<div class="pt-[80px] max-w-7xl mx-auto px-4 min-h-screen">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-4 p-4 rounded {{ message.tags }} bg-green-100 text-green-800">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  
+  {% block content %}{% endblock %}
+</div>
 
-    <!-- Основной контент -->
-    <main class="content-wrapper">
-        {% block content %}{% endblock %}
-    </main>
+<!-- Подвал -->
+<footer class="bg-gray-800 text-gray-200 py-4 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 text-center">
+    &copy; {{ now.year }} Мой сайт объявлений
+  </div>
+</footer>
 
-    <!-- Футер с анимацией -->
-    <footer class="animated-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Barter Community</h4>
-                <div class="social-links">
-                    <a href="#"><i class="bx bxl-telegram"></i></a>
-                    <a href="#"><i class="bx bxl-vk"></i></a>
-                    <a href="#"><i class="bx bxl-instagram"></i></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <p>&copy; 2024 Barter. All rights reserved</p>
-                <div class="footer-links">
-                    <a href="#">Правила</a>
-                    <a href="#">Контакты</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Скрипты -->
-    <script src="{% static 'js/themeSwitcher.js' %}"></script>
-    <script src="{% static 'js/animations.js' %}"></script>
+<!-- Скрипты -->
+{% block extra_scripts %}{% endblock %}
 </body>
 </html>
