@@ -8,7 +8,7 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
-    
+    bio = models.TextField(blank=True)
     # avatar = models.ImageField(upload_to='/s3 в будущем', blank=True, null=True)
 
     ads = models.ManyToManyField('Ad', related_name='users', blank=True)
@@ -40,10 +40,10 @@ class Ad(models.Model):
         ('Other', 'Другое')
     ]
     AD_CATEGORY_VALUES = [
-        'Electronics',
-        'Clothing',
-        'Books',
-        'Other'
+        'Электроника',
+        'Одежда',
+        'Книги',
+        'Другое'
     ]
     AD_CONDITION = [
         ('New', 'Новое'),
@@ -65,6 +65,11 @@ class Ad(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_category_display(self):
+        return dict(self.AD_CATEGORY).get(self.category)
+
+    def get_condition_display(self):
+        return dict(self.AD_CONDITION).get(self.condition)
 
     def __str__(self):
         return self.title

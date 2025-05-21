@@ -1,26 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Мои объявления</h1>
+<h1 class="text-3xl font-bold mb-6 mt-4">Мои объявления</h1>
 {% if ads %}
-    <ul class="space-y-4">
-        {% for ad in ads %}
-            <li class="border p-4 rounded shadow">
-                <h2 class="text-xl font-semibold mb-2">{{ ad.title }}</h2>
-                <p>{{ ad.description|truncatechars:100 }}</p>
-                <div class="mt-2 flex space-x-4">
-                    <a href="{% url 'ad_detail' ad.id %}" class="text-blue-600 hover:underline">Подробнее</a>
-                    <a href="{% url 'ad_update' ad.id %}" class="text-green-600 hover:underline">Редактировать</a> 
-                    <form action="ad_delete" method="post" class="inline">
-                        {% csrf_token %}
-                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Вы уверены, что хотите удалить это объявление?');">Удалить</button>
-                    </form>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for ad in ads %}
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if ad.image_url %}
+        <img src="{{ ad.image_url }}" alt="{{ ad.title }}" class="h-[200px] w-full object-cover">
+      {% else %}
+        <div class="h-[200px] bg-gray-200 flex items-center justify-center text-gray-500">Нет изображения</div>
+      {% endif %}
+        
+        <div class="p-6">
+            <h2 class="text-xl font-semibold mb-2">{{ ad.title }}</h2>
+            <p class="text-gray-700">{{ ad.description|truncatechars:100 }}</p>            
+                <p class="text-sm text-gray-500 mt-2">Категория: {{ ad.get_category_display }}</p>
+            <div class="mt-4 flex space-x-2">
+
+                
+
+                <a href="{% url 'ad_detail' ad.id %}" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
+                    Подробнее
+                </a>
+
+                <a href="{% url 'ad_update' ad.id %}" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-sm">
+                    Редактировать
+                </a>
+
+                <form action="{% url 'ad_delete' ad.id %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-sm" onclick="return confirm('Вы уверены, что хотите удалить это объявление?');">
+                        Удалить
+                    </button>
+                </form>
                 </div>
-            </li>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
-    <p>У вас пока нет объявлений.</p>
+<p class="text-gray-500">У вас пока нет объявлений.</p>
 {% endif %}
 <a href="{% url 'ad_list' %}" class="mt-4 inline-block px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Вернуться к списку объявлений</a>
 {% endblock %}

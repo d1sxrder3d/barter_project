@@ -10,7 +10,8 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('register/', views.user_register, name='register'),
-
+    path('my_profile/', views.user_profile, name='profile'),
+    
     path('ad_create/', views.ad_create, name='ad_create'),
     path('ad_detail/<int:ad_id>/', views.ad_detail, name='ad_detail'),
 

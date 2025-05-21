@@ -3,9 +3,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm
+from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm, ProfileForm
 from .models import Ad, User, ExchangeProposal
 
+cat = {
+    'Электроника': 'Electronics',
+    'Одежда': 'Clothing',
+    'Книги': 'Books',
+    'Другое': 'Other',
+}
 
 
 def ad_list(request):
@@ -15,11 +21,14 @@ def ad_list(request):
 
     query = request.GET.get('q')
     category = request.GET.get('category')
-
+    
     if query:
         ads = ads.filter(title__icontains=query)  
     if category:
-        ads = ads.filter(category=category) 
+
+        view_category = cat[category]
+
+        ads = ads.filter(category=view_category) 
 
     return render(request, 'ads/ad_list.html', {
         'ads': ads, 'query': query, 'categories': categories
@@ -43,11 +52,13 @@ def ad_create(request):
 @login_required
 def my_ads(request):
     ads = Ad.objects.filter(user=request.user)
+
     return render(request, 'ads/my_ads.html', {'ads': ads})
 
 
 def ad_detail(request, ad_id):
     ad = Ad.objects.get(pk=ad_id)
+
     return render(request, 'ads/ad_detail.html', {'ad': ad})
 
 
@@ -129,3 +140,33 @@ def user_logout(request):
     logout(request)
     messages.success(request, "Выход выполнен успешно.")
     return redirect('ad_list')
+
+
+@login_required
+def user_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Профиль успешно обновлен.')
+            return redirect('user_profile')
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'auth/my_profile.html', {'form': form})
+
+@login_required
+def create_exchange_proposal(request, ad_s_id, ad_r_id):
+    ad_s = Ad.objects.get(pk=ad_s_id)
+    ad_r = Ad.objects.get(pk=ad_r_id)
+
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        if message:
+            exchange_proposal = ExchangeProposal.objects.create(
+                ad_sender_id=request.ad_s.id,
+                ad_receiver_id=request.ad_r.id,
+                message=message
+            )
+            return redirect('/')
+    # return render(request, 'ads/create_exchange_proposal.html', {'ad': ad})
