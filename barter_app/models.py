@@ -22,7 +22,10 @@ class User(AbstractUser):
     )
     # last_activity = models.DateTimeField(null=True, blank=True) мейби потом сделаю 
     
+    def get_user_exchanges(self):
+        return ExchangeProposal.objects.filter(models.Q(ad_reciever__user=self) | models.Q(ad_sender__user=self))
 
+    
     def __str__(self):
         return self.username
 
@@ -88,8 +91,10 @@ class ExchangeProposal(models.Model):
     
     id = models.AutoField(primary_key=True)
 
-    ad_reciever_id = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='reciever_ad')
-    ad_sender_id = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='sender_ad')
+    ad_reciever = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='reciever_ad')
+    ad_sender = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='sender_ad')
+
+
 
     status = models.CharField(max_length=10, choices=EP_STATUS, default='Pending')
     comment = models.TextField(blank=True, null=True)

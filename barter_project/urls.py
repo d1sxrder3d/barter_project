@@ -20,7 +20,7 @@ urlpatterns = [
     path('ad_update/<int:ad_id>/', views.ad_update, name='ad_update'),
     path('ad_delete/<int:ad_id>/', views.ad_delete, name='ad_delete'),
     
-
+    path('exchange_create/<int:ad_r_id>/', views.exchange_create, name='exchange_create'),
     
     path('my_exchanges/', views.my_exchanges, name='my_exchanges'),
     path('my_ads/', views.my_ads, name='my_ads'),

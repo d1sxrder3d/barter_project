@@ -63,7 +63,40 @@ class AdDetails(forms.ModelForm):
 class CreateExchange(forms.ModelForm):
     class Meta:
         model = ExchangeProposal
-        fields = ['ad_reciever_id', 'ad_sender_id', 'status', 'comment']
+        # ad_reciever устанавливается в view, ad_sender выбирается пользователем из его объявлений
+        fields = ['ad_sender', 'comment']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        ad_for_exchange = kwargs.pop('ad_for_exchange', None) # Это r_ad из view
+        super().__init__(*args, **kwargs)
+
+        if user:
+            
+            queryset = Ad.objects.filter(user=user)
+            if ad_for_exchange:
+                queryset = queryset.exclude(pk=ad_for_exchange.pk)
+            
+            self.fields['ad_sender'].queryset = queryset
+            self.fields['ad_sender'].label = "Ваше объявление для обмена"
+            self.fields['ad_sender'].empty_label = "Выберите ваше объявление" # Опционально
+            
+            if not queryset.exists():
+                # Если у пользователя нет подходящих объявлений, можно отключить поле
+                self.fields['ad_sender'].disabled = True
+                self.fields['ad_sender'].help_text = "У вас нет других объявлений для предложения обмена."
+        else:
+            self.fields['ad_sender'].queryset = Ad.objects.none()
+            self.fields['ad_sender'].disabled = True
+        
+        self.fields['comment'].label = "Комментарий к предложению (необязательно)"
+
+
+class MyExchangesForm(forms.ModelForm):
+    class Meta:
+        model = ExchangeProposal
+        fields = ['status']
         widgets = {
-            'status': forms.Select(choices=ExchangeProposal.EP_STATUS)
+            'status': forms.Select(choices=ExchangeProposal.status)
         }
+    

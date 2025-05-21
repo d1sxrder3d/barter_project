@@ -1,46 +1,51 @@
+<!-- templates/exc/my_exchanges.html -->
+{% extends "base.html" %}
+
 {% block content %}
-<div class="exchanges-container">
-    <div class="exchange-tabs">
-        <button class="tab active" data-tab="incoming">Входящие ({{ incoming.count }})</button>
-        <button class="tab" data-tab="outgoing">Исходящие ({{ outgoing.count }})</button>
-        <button class="tab" data-tab="active">Текущие ({{ active.count }})</button>
-        <button class="tab" data-tab="archive">Архив ({{ archive.count }})</button>
-    </div>
+<div class="container">
+    <h1>Мои обмены</h1>
 
-    <!-- Входящие предложения -->
-    <div class="tab-content active" id="incoming">
+    <h2>Входящие предложения (ожидают вашего ответа)</h2>
+    {% if incoming %}
+        <ul>
         {% for exchange in incoming %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет входящих предложений</div>
+            <li>
+                Предложение от {{ exchange.ad_sender.user.username }} на ваше "{{ exchange.ad_reciever.title }}" в обмен на его "{{ exchange.ad_sender.title }}".
+                
+                
+                <!-- Кнопки принять/отклонить -->
+            </li>
         {% endfor %}
-    </div>
+        </ul>
+    {% else %}
+        <p>Нет входящих предложений.</p>
+    {% endif %}
 
-    <!-- Исходящие предложения -->
-    <div class="tab-content" id="outgoing">
+    <h2>Исходящие предложения (ожидают ответа)</h2>
+    {% if outgoing %}
+        <ul>
         {% for exchange in outgoing %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет исходящих предложений</div>
+            <li>
+                Вы предложили {{ exchange.ad_reciever.user.username }} обменять ваше "{{ exchange.ad_sender.title }}" на его "{{ exchange.ad_reciever.title }}".
+                <!-- Возможность отозвать предложение -->
+            </li>
         {% endfor %}
-    </div>
+        </ul>
+    {% else %}
+        <p>Нет исходящих предложений.</p>
+    {% endif %}
 
-    <!-- Активные обмены -->
-    <div class="tab-content" id="active">
-        {% for exchange in active %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет активных обменов</div>
-        {% endfor %}
-    </div>
-
-    <!-- Архив -->
-    <div class="tab-content" id="archive">
+    <h2>Архив (завершенные или отклоненные)</h2>
+    {% if archive %}
+        <ul>
         {% for exchange in archive %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Архив пуст</div>
+            <li>
+                Обмен между вами ({{ exchange.ad_sender.title }}) и {{ exchange.ad_reciever.user.username }} ({{ exchange.ad_reciever.title }}). Статус: {{ exchange.get_status_display }}
+            </li>
         {% endfor %}
-    </div>
+        </ul>
+    {% else %}
+        <p>Архив пуст.</p>
+    {% endif %}
 </div>
 {% endblock %}
