@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="exchange-create-container">
+    <h1 class="page-title">Предложить обмен</h1>
+    
+    <div class="exchange-target">
+        <div class="target-card">
+            <h3>Вы хотите получить:</h3>
+            <div class="ad-preview">
+                <img src="{{ receiver_ad.image_url }}" 
+                     alt="{{ receiver_ad.title }}">
+                <div class="ad-info">
+                    <h4>{{ receiver_ad.title }}</h4>
+                    <p class="price">{{ receiver_ad.price }} ₽</p>
+                    <p class="owner">Владелец: {{ receiver_ad.user.username }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="exchange-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <label>Ваше объявление для обмена:</label>
+            {{ form.sender_ad }}
+        </div>
+
+        <div class="form-section">
+            <label>Ваше сообщение:</label>
+            {{ form.message }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Отправить предложение
+            </button>
+            <a href="{% url 'ad_detail' receiver_ad.id %}" class="btn-cancel">
+                Отмена
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
