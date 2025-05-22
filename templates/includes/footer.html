@@ -1,0 +1,101 @@
+{% load static %}
+
+<footer class="site-footer">
+<div class="footer-content">
+    <div class="footer-section">
+        <h4>Barter Exchange</h4>
+        <p>Платформа для безопасных обменов</p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-vk"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <div class="footer-section">
+        <h4>Навигация</h4>
+        <ul>
+            <li><a href="{% url 'ad_list' %}">Объявления</a></li>
+            <li><a href="{% url 'my_exchanges' %}">Мои обмены</a></li>
+            <li><a href="{% url 'profile' %}">Профиль</a></li>
+        </ul>
+    </div>
+
+    <div class="footer-section">
+        <h4>Помощь</h4>
+        <ul>
+            <li><a href="#">Правила использования</a></li>
+            <li><a href="#">Контакты</a></li>
+            <li><a href="#">FAQ</a></li>
+        </ul>
+    </div>
+</div>
+<div class="footer-bottom">
+    <p>© 2024 Barter Exchange. Все права защищены</p>
+</div>
+</footer>
+
+
+<style>
+.site-footer {
+    background: #2d3748;
+    color: white;
+    padding: 3rem 0;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.footer-section h4 {
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #a0aec0;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: #ffffff;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.5rem;
+}
+
+.social-links a {
+    color: #a0aec0;
+    transition: color 0.2s;
+}
+
+.social-links a:hover {
+    color: #4299e1;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #4a5568;
+    color: #a0aec0;
+}
+</style>

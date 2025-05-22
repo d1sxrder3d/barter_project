@@ -203,24 +203,72 @@ def exchange_create(request, ad_r_id):
 
 @login_required
 def my_exchanges(request):
-    # request.user уже является объектом авторизованного пользователя
-    # Метод get_user_exchanges() определён в модели User и возвращает все обмены пользователя
     all_user_exchanges = request.user.get_user_exchanges().order_by('-created_at')
 
-    # Входящие предложения: пользователь является получателем, статус "Ожидание"
     incoming = all_user_exchanges.filter(
         ad_reciever__user=request.user, 
         status=ExchangeProposal.EP_STATUS[0][0]  # 'Pending'
     )
 
-    # Исходящие предложения: пользователь является отправителем, статус "Ожидание"
     outgoing = all_user_exchanges.filter(
         ad_sender__user=request.user, 
         status=ExchangeProposal.EP_STATUS[0][0]  # 'Pending'
     )
 
-    # Архивные предложения: статус "Принято" или "Отклонено"
-    archive = all_user_exchanges.filter(
-        status__in=[ExchangeProposal.EP_STATUS[1][0], ExchangeProposal.EP_STATUS[2][0]]  # 'Accepted', 'Rejected'
+    accepted = all_user_exchanges.filter(
+        status = ExchangeProposal.EP_STATUS[1][0]
     )
-    return render(request, 'exc/my_exchanges.html', {'incoming': incoming, 'outgoing': outgoing, 'archive': archive})
+    rejected = all_user_exchanges.filter(
+        status = ExchangeProposal.EP_STATUS[2][0]
+    )
+
+    return render(request, 'exc/my_exchanges.html', {'incoming': incoming, 
+                            'outgoing': outgoing, 'accepted': accepted, 'rejected': rejected})
+
+
+
+@login_required
+def exchange_detail(request, exchange_id, exchange_type):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    r_ad = exchange.ad_reciever
+    s_ad = exchange.ad_sender
+    
+    if exchange_type == 1:
+        #Входящее
+        return render(request, 'exc/inc_exchange_detail.html', {'exchange': exchange, 'r_ad': r_ad, 's_ad': s_ad})
+    if exchange_type == 2:
+        #Исходяшее
+        return render(request, 'exc/out_exchange_detail.html', {'exchange': exchange, 'r_ad': r_ad, 's_ad': s_ad})
+    #Архивное
+    return render(request, 'exc/arc_exchange_detail.html', {'exchange': exchange, 
+            'r_ad': r_ad, 's_ad': s_ad, 'exchange_status': exchange.get_status_display()})
+
+@login_required
+def exchange_cancel(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+
+    if request.method == 'POST':
+        exchange.delete()
+        return redirect('my_exchanges')
+    return render(request, 'exc/exchange_cancel.html', {'exchange': exchange})
+
+@login_required
+def exchange_reject(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    if request.method == 'POST':
+        exchange.status = ExchangeProposal.EP_STATUS[2][0]
+        exchange.save()
+        return redirect('my_exchanges')
+    
+@login_required
+def exchange_accept(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    if request.method == 'POST':
+        exchange.status = ExchangeProposal.EP_STATUS[1][0]
+        exchange.save()
+        return redirect('my_exchanges')
+    
