@@ -186,7 +186,7 @@ def user_profile_edit(request):
 
 @login_required
 def exchange_create(request, ad_r_id):
-    r_ad = get_object_or_404(Ad, pk=ad_r_id) # Объявление, которое хотят получить
+    r_ad = get_object_or_404(Ad, pk=ad_r_id) 
 
     if r_ad.user == request.user:
         messages.error(request, "Вы не можете предложить обмен на свое собственное объявление.")
@@ -206,7 +206,7 @@ def exchange_create(request, ad_r_id):
             
             exchange.save()
             messages.success(request, 'Предложение обмена успешно отправлено.')
-            return redirect('exc/my_exchanges')
+            return redirect('my_exchanges')
             #return redirect('ad_detail', ad_id=r_ad.id) 
         else:
             
