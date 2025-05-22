@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q 
 
 from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm, ProfileForm, CreateExchange, MyExchangesForm
 from .models import Ad, User, ExchangeProposal
@@ -13,17 +14,33 @@ cat = {
     'Другое': 'Other',
 }
 
+cond = {
+    'Новое': 'New',
+    'Б/у': 'Used',
+}
+
 
 def ad_list(request):
     ads = Ad.objects.all()    
    
     categories = Ad.AD_CATEGORY_VALUES
+    conditions = Ad.AD_CONDITION_VALUES
+
 
     query = request.GET.get('q')
     category = request.GET.get('category')
+    condition = request.GET.get('condition')
     
     if query:
-        ads = ads.filter(title__icontains=query)  
+        ads = ads.filter(Q(title__icontains=query) | Q(description__icontains=query))  
+
+    if condition:
+
+        view_condition = cond[condition]
+
+
+        ads = ads.filter(condition=view_condition) 
+
     if category:
 
         view_category = cat[category]
@@ -31,7 +48,7 @@ def ad_list(request):
         ads = ads.filter(category=view_category) 
 
     return render(request, 'ads/ad_list.html', {
-        'ads': ads, 'query': query, 'categories': categories
+        'ads': ads, 'query': query, 'categories': categories, 'conditions': conditions
     })
 
 

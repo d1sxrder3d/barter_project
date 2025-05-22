@@ -53,6 +53,12 @@ class Ad(models.Model):
         ('Used', 'Б/у')
     ]
 
+    AD_CONDITION_VALUES = [
+        'Новое',
+        'Б/у'
+    ]
+
+
 
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
