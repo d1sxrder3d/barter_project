@@ -1,46 +1,307 @@
+<!-- templates/exc/my_exchanges.html -->
+{% extends "base.html" %}
+{% load static %}
+
 {% block content %}
 <div class="exchanges-container">
-    <div class="exchange-tabs">
-        <button class="tab active" data-tab="incoming">Входящие ({{ incoming.count }})</button>
-        <button class="tab" data-tab="outgoing">Исходящие ({{ outgoing.count }})</button>
-        <button class="tab" data-tab="active">Текущие ({{ active.count }})</button>
-        <button class="tab" data-tab="archive">Архив ({{ archive.count }})</button>
+    <h1 class="page-title">Мои обмены</h1>
+
+    <div class="exchange-section">
+        <h2 class="section-title">
+            <i class="fas fa-inbox"></i>
+            Входящие предложения
+            <span class="badge">{{ incoming|length }}</span>
+        </h2>
+        
+        {% if incoming %}
+        <div class="exchange-list">
+            {% for exchange in incoming %}
+            <div class="exchange-card incoming">
+                <div class="exchange-header">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        Автор
+                        {{ exchange.ad_sender.user.username }}
+                    </div>
+                    {% comment %} <span class="status pending">Ожидает ответа</span> {% endcomment %}
+                </div>
+                
+                <div class="exchange-content">
+                    <div class="offer">
+                        Обмен
+                        <a href="{% url 'ad_detail' exchange.ad_sender.id %}" class="offer-item btn">{{ exchange.ad_sender.title }}</a>
+                        На
+                        <i class="fas fa-exchange-alt"></i>
+                        <a href="{% url 'ad_detail' exchange.ad_reciever.id %}" class="offer-item btn">{{ exchange.ad_reciever.title }}</a>
+                    </div>
+                    
+                    <div class="actions">
+                        <a href="{% url 'exchange_detail' exchange.id 1 %}" class="btn-details">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-envelope-open"></i>
+            <p>Нет входящих предложений</p>
+        </div>
+        {% endif %}
     </div>
 
-    <!-- Входящие предложения -->
-    <div class="tab-content active" id="incoming">
-        {% for exchange in incoming %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет входящих предложений</div>
-        {% endfor %}
+
+    <div class="exchange-section">
+        <h2 class="section-title">
+            <i class="fas fa-inbox"></i>
+            Исходящие предложения
+            <span class="badge">{{ outgoing|length }}</span>
+        </h2>
+        
+        {% if outgoing %}
+        <div class="exchange-list">
+            {% for exchange in outgoing %}
+            <div class="exchange-card outgoing">
+                <div class="exchange-header">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        Автор:
+                        {{ exchange.ad_sender.user.username }}
+                    </div>
+                    {% comment %} <span class="status pending">Ожидает ответа</span> {% endcomment %}
+                </div>
+                
+                <div class="exchange-content">
+                    <div class="offer">
+                        Обмен
+                        <a href="{% url 'ad_detail' exchange.ad_sender.id %}" class="offer-item btn">{{ exchange.ad_sender.title }}</a>
+                        На
+                        <i class="fas fa-exchange-alt"></i>
+                        <a href="{% url 'ad_detail' exchange.ad_reciever.id %}" class="offer-item btn">{{ exchange.ad_reciever.title }}</a>
+                    </div>
+                    
+                    <div class="actions">
+                        <a href="{% url 'exchange_detail' exchange.id 2 %}" class="btn-details">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-envelope-open"></i>
+            <p>Нет исходящих предложений </p>
+        </div>
+        {% endif %}
     </div>
 
-    <!-- Исходящие предложения -->
-    <div class="tab-content" id="outgoing">
-        {% for exchange in outgoing %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет исходящих предложений</div>
-        {% endfor %}
-    </div>
-
-    <!-- Активные обмены -->
-    <div class="tab-content" id="active">
-        {% for exchange in active %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Нет активных обменов</div>
-        {% endfor %}
-    </div>
-
-    <!-- Архив -->
-    <div class="tab-content" id="archive">
-        {% for exchange in archive %}
-            {% include 'exchanges/_exchange_item.html' %}
-        {% empty %}
-            <div class="no-exchanges">Архив пуст</div>
-        {% endfor %}
+    <div class="exchange-section">
+        <h2 class="section-title">
+            <i class="fas fa-archive"></i>
+            Архив обменов
+            <span class="badge">{{ archive|length }}</span>
+        </h2>
+        
+        {% if accepted or rejected %}
+        <div class="exchange-list">
+            {% for exchange in accepted %}
+            <div class="exchange-card archive">
+                <div class="exchange-header">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        Автор:
+                        {{ exchange.ad_sender.user.username }}
+                    </div>
+                    <span class="status accepted"> Принято </span>
+                </div>
+                
+                <div class="exchange-content">
+                    <div class="offer">
+                        Обмен
+                        <a href="{% url 'ad_detail' exchange.ad_sender.id %}" class="offer-item btn">{{ exchange.ad_sender.title }}</a>
+                        На
+                        <i class="fas fa-exchange-alt"></i>
+                        <a href="{% url 'ad_detail' exchange.ad_reciever.id %}" class="offer-item btn">{{ exchange.ad_reciever.title }}</a>
+                    </div>
+                    
+                    <div class="actions">
+                        <a href="{% url 'exchange_detail' exchange.id 3 %}" class="btn-details">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% for exchange in rejected %}
+            <div class="exchange-card archive">
+                <div class="exchange-header">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        Автор:
+                        {{ exchange.ad_sender.user.username }}
+                    </div>
+                    <span class="status rejected"> Отклонено </span>
+                </div>
+                
+                <div class="exchange-content">
+                    <div class="offer">
+                        Обмен
+                        <a href="{% url 'ad_detail' exchange.ad_sender.id %}" class="offer-item btn">{{ exchange.ad_sender.title }}</a>
+                        На
+                        <i class="fas fa-exchange-alt"></i>
+                        <a href="{% url 'ad_detail' exchange.ad_reciever.id %}" class="offer-item btn">{{ exchange.ad_reciever.title }}</a>
+                    </div>
+                    
+                    <div class="actions">
+                        <a href="{% url 'exchange_detail' exchange.id 3 %}" class="btn-details">
+                            <i class="fas fa-info-circle"></i> Подробнее
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-envelope-open"></i>
+            <p>Архив обменов пуст</p>
+        </div>
+        {% endif %}
+        
     </div>
 </div>
+
+
+<style>
+.exchanges-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: #2d3748;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.exchange-section {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.badge {
+    background: #e2e8f0;
+    color: #4a5568;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.exchange-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.exchange-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.exchange-card:hover {
+    transform: translateY(-2px);
+}
+
+.exchange-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4a5568;
+}
+
+.status {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+}
+
+.status.accepted {
+    background:rgb(141, 255, 106);
+    color:rgb(135, 179, 97);
+}
+
+.status.rejected {
+    background: rgb(243, 103, 103);
+    color:rgb(104, 70, 39);
+}
+
+.exchange-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.offer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+.offer-item {
+    padding: 0.5rem 1rem;
+    background: #f7fafc;
+    border-radius: 6px;
+}
+
+.btn-details {
+    background: #4299e1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-details:hover {
+    opacity: 0.9;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #a0aec0;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+</style>
 {% endblock %}

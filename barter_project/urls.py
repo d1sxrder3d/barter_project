@@ -20,8 +20,16 @@ urlpatterns = [
     path('ad_update/<int:ad_id>/', views.ad_update, name='ad_update'),
     path('ad_delete/<int:ad_id>/', views.ad_delete, name='ad_delete'),
     
+    path('exchange_create/<int:ad_r_id>/', views.exchange_create, name='exchange_create'),
 
-    
+    path('exchange_detail/<int:exchange_id>/<int:exchange_type>/', views.exchange_detail, name='exchange_detail'),
+
+    path('exchange_accept/<int:exchange_id>/', views.exchange_accept, name='exchange_accept'),
+    path('exchange_reject/<int:exchange_id>/', views.exchange_reject, name='exchange_reject'),
+
+    path('exchange_cancel/<int:exchange_id>/', views.exchange_cancel, name='exchange_cancel'),
+
     path('my_exchanges/', views.my_exchanges, name='my_exchanges'),
+
     path('my_ads/', views.my_ads, name='my_ads'),
 ]

@@ -1,44 +1,38 @@
 {% extends "base.html" %}
-{% load static %}
+{%load static%}
 
 {% block content %}
+
 <div class="container">
-    <h1 class="target-card text-center">Предложить обмен</h1>
+    
+    <h1 class="target-card text-center"> {{exchange_status}}</h1>
     
     <div class="row justify-content-between"> 
         <div class="col-lg-5 mb-4">
             <div class="card h-200 shadow-lg border-0 text-center"> 
                     <h3 class="card-title mt-2"> Ваше объявление для обмена: </h3>
-                    <form method="post" class="card-body">
-                    {% csrf_token %}
-                    
-                    <div class="form-section shadow-lg mt-5 ">
-                        {{ form.ad_sender }}
-                    </div>
-
                     <div class="card-body shadow-lg">
-                        
-                        <div class="form-section">
-                            <label>Ваше сообщение:</label>
-                            {{ form.comment }}
+                        <div class="card">
+                            {% if s_ad.image_url %}
+                                <img src="{{ s_ad.image_url }}"
+                                    class="card-img-top" 
+                                    alt="{{ ad.title }}"
+                                    style="height: 300px; object-fit: cover;">
+                            {% else %}
+                                <div class="placeholder-image d-flex align-items-center justify-content-center"
+                                    style="height: 300px; background: #f3f4f6;">
+                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="ad-info">
+                                <h4>{{ s_ad.title }}</h4>
+                                <p class="owner">Владелец: {{ s_ad.user.username }}</p>
+                                <p class="price">Категория: {{ s_ad.get_category_display }}</p>
+                                <p class="description">{{ s_ad.description }}</p>
+                            </div>
                         </div>
-
-                        <div class="form-actions">
-                            
-                            
-                        </div>
-
                     </div>
-                    <div class="col-12 mt-5"> 
-                        <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> Отправить предложение
-                        </button>
-
-                        <a href="{% url 'ad_detail' r_ad.id %}" class="btn btn-secondary">
-                                Отмена
-                        </a>
-                    </div>
-                </form>
+                    
             </div>
         </div>
 
@@ -50,10 +44,11 @@
                      width="80">
             </div>
         </div>
+
         
         <div class="col-lg-5 mb-4">
             <div class="card h-200 shadow-lg border-0 text-center"> 
-                <h3 class="card-title mt-2"> Вы хотите получить: </h3>
+                <h3 class="card-title mt-2"> Объявление пользователя: </h3>
                 <div class="card-body shadow-lg">
                     <div class="card">
                         {% if r_ad.image_url %}
@@ -82,4 +77,6 @@
 
     
 </div>
+
+
 {% endblock %}

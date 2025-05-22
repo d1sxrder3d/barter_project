@@ -318,3 +318,131 @@ input[type="file"] {
 .save-btn:hover {
     opacity: 0.9;
 }
+
+
+.exchanges-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: #2d3748;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.exchange-section {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.badge {
+    background: #e2e8f0;
+    color: #4a5568;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.exchange-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.exchange-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.exchange-card:hover {
+    transform: translateY(-2px);
+}
+
+.exchange-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #4a5568;
+}
+
+.status {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+}
+
+.status.accepted{
+    background: #fffaf0;
+    color: #9eff49;
+}
+
+.status.rejected {
+    background: #fffaf0;
+    color: #c05621;
+}
+
+.exchange-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.offer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
+.offer-item {
+    padding: 0.5rem 1rem;
+    background: #f7fafc;
+    border-radius: 6px;
+}
+
+.btn-details {
+    background: #4299e1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-details:hover {
+    opacity: 0.9;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #a0aec0;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}

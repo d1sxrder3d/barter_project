@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm, ProfileForm
+from .forms import RegisterForm, CustomUserAuthenticationForm, AdForm, ProfileForm, CreateExchange, MyExchangesForm
 from .models import Ad, User, ExchangeProposal
-from barter_app import models
 
 cat = {
     'Электроника': 'Electronics',
@@ -168,5 +167,108 @@ def user_profile_edit(request):
 
     return render(request, 'auth/edit_profile.html', {'form': form})
 
+@login_required
+def exchange_create(request, ad_r_id):
+    r_ad = get_object_or_404(Ad, pk=ad_r_id) # Объявление, которое хотят получить
+
+    if r_ad.user == request.user:
+        messages.error(request, "Вы не можете предложить обмен на свое собственное объявление.")
+        return redirect('ad_detail', ad_id=r_ad.id)
+
+    # Проверка, есть ли у пользователя объявления для предложения
+    user_ads_to_offer = Ad.objects.filter(user=request.user).exclude(pk=r_ad.pk)
+    if not user_ads_to_offer.exists():
+        messages.error(request, "У вас нет объявлений, которые можно предложить для обмена (кроме текущего, если оно ваше).")
+        return redirect('ad_detail', ad_id=r_ad.id)
+
+    if request.method == 'POST':
+        form = CreateExchange(request.POST, user=request.user, ad_for_exchange=r_ad)
+        if form.is_valid():
+            exchange = form.save(commit=False)
+            exchange.ad_reciever = r_ad 
+            
+            exchange.save()
+            messages.success(request, 'Предложение обмена успешно отправлено.')
+            return redirect('exc/my_exchanges')
+            #return redirect('ad_detail', ad_id=r_ad.id) 
+        else:
+            
+            return render(request, 'exc/exchange_create.html', {
+                'form': form, 
+                'r_ad': r_ad
+            })
+    else: # GET request
+        form = CreateExchange(user=request.user, ad_for_exchange=r_ad)
+    return render(request, 'exc/exchange_create.html', {'form': form, 'r_ad': r_ad})
+
+@login_required
 def my_exchanges(request):
-    pass
+    all_user_exchanges = request.user.get_user_exchanges().order_by('-created_at')
+
+    incoming = all_user_exchanges.filter(
+        ad_reciever__user=request.user, 
+        status=ExchangeProposal.EP_STATUS[0][0]  # 'Pending'
+    )
+
+    outgoing = all_user_exchanges.filter(
+        ad_sender__user=request.user, 
+        status=ExchangeProposal.EP_STATUS[0][0]  # 'Pending'
+    )
+
+    accepted = all_user_exchanges.filter(
+        status = ExchangeProposal.EP_STATUS[1][0]
+    )
+    rejected = all_user_exchanges.filter(
+        status = ExchangeProposal.EP_STATUS[2][0]
+    )
+
+    return render(request, 'exc/my_exchanges.html', {'incoming': incoming, 
+                            'outgoing': outgoing, 'accepted': accepted, 'rejected': rejected})
+
+
+
+@login_required
+def exchange_detail(request, exchange_id, exchange_type):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    r_ad = exchange.ad_reciever
+    s_ad = exchange.ad_sender
+    
+    if exchange_type == 1:
+        #Входящее
+        return render(request, 'exc/inc_exchange_detail.html', {'exchange': exchange, 'r_ad': r_ad, 's_ad': s_ad})
+    if exchange_type == 2:
+        #Исходяшее
+        return render(request, 'exc/out_exchange_detail.html', {'exchange': exchange, 'r_ad': r_ad, 's_ad': s_ad})
+    #Архивное
+    return render(request, 'exc/arc_exchange_detail.html', {'exchange': exchange, 
+            'r_ad': r_ad, 's_ad': s_ad, 'exchange_status': exchange.get_status_display()})
+
+@login_required
+def exchange_cancel(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+
+    if request.method == 'POST':
+        exchange.delete()
+        return redirect('my_exchanges')
+    return render(request, 'exc/exchange_cancel.html', {'exchange': exchange})
+
+@login_required
+def exchange_reject(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    if request.method == 'POST':
+        exchange.status = ExchangeProposal.EP_STATUS[2][0]
+        exchange.save()
+        return redirect('my_exchanges')
+    
+@login_required
+def exchange_accept(request, exchange_id):
+
+    exchange = get_object_or_404(ExchangeProposal, pk=exchange_id)
+    if request.method == 'POST':
+        exchange.status = ExchangeProposal.EP_STATUS[1][0]
+        exchange.save()
+        return redirect('my_exchanges')
+    
