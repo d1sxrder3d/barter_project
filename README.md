@@ -59,4 +59,4 @@
 
 - **Бэкенд:** Python, Django
 - **Фронтенд:** HTML, CSS, JavaScript, Bootstrap 5
-- **База данных:** SQLite (по умолчанию для раз
+- **База данных:** SQLite
