@@ -8,7 +8,8 @@
     <div class="col-12">
         <div class="search-card p-4 shadow-lg rounded-3">
             <form method="get" class="row g-3">
-                <div class="col-md-6">
+                <!-- Поисковое поле -->
+                <div class="col-md-5">
                     <input type="text" 
                            name="q" 
                            class="form-control" 
@@ -16,7 +17,8 @@
                            value="{{ request.GET.q }}">
                 </div>
                 
-                <div class="col-md-3">
+                <!-- Фильтр по категории -->
+                <div class="col-md-2">
                     <select name="category" class="form-select">
                         <option value="">Все категории</option>
                         {% for cat in categories %}
@@ -25,6 +27,19 @@
                     </select>
                 </div>
 
+                <!-- Новый фильтр по состоянию -->
+                <div class="col-md-2">
+                    <select name="condition" class="form-select">
+                        <option value="">Все состояния</option>
+                        {% for cond in conditions %}
+                        <option value="{{ cond }}" {% if request.GET.condition == cond %}selected{% endif %}>
+                            {{ cond }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Кнопка поиска -->
                 <div class="col-md-3">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-search"></i> Найти
